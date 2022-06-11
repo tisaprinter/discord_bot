@@ -1,0 +1,7 @@
+certifi
+charset-normalizer
+configparser
+idna
+PySimpleGUI
+requests
+urllib3
