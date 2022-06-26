@@ -1,6 +1,7 @@
 import requests
 
-API_URL = "http://192.153.57.67:81/"
+#API_URL = "http://185.80.53.196:81/"
+API_URL='http://127.0.0.1:81/'
 
 # BOTS
 def get_bots():
