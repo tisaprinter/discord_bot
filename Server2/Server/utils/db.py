@@ -4,6 +4,7 @@ import mysql.connector
 from cfg import DATABASE
 
 def cmd(cmd, value=None, database=DATABASE['NAME'],):
+    # print("==>%s: %s", cmd, DATABASE['NAME'])
     conn = mysql.connector.connect(
     host=DATABASE['HOST'],
     user=DATABASE['USER'],

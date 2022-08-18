@@ -35,9 +35,12 @@ def add_bot_to_list(inputted_data, window):
     name = inputted_data['name']
     account1_token = inputted_data['account1_token']
     account2_token = inputted_data['account2_token']
+    account3_token = inputted_data['account3_token']
+    account4_token = inputted_data['account4_token']
+    account5_token = inputted_data['account5_token']
     channel_id = inputted_data['channel_id']
 
-    server_data = post_bots(name, account1_token, account2_token, channel_id)
+    server_data = post_bots(name, account1_token, account2_token, account3_token, account4_token, account5_token, channel_id)
     # server_data = {
     #                 "id": "2",
     #                 "success": "True"

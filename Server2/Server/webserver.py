@@ -43,9 +43,9 @@ def add_conversations():
     messages = request_data['messages']
     
     if not messages:
-        return {'success': False, 'code': 400, 'message': f'conversation must include at least one mesage.'}, 400
+        return {'success': False, 'code': 400, 'message': f'conversation must include at least one message.'}, 400
     
-    required_data = ['content', 'sender', 'delay', 'response']
+    required_data = ['content', 'sender', 'receiver', 'delay', 'response']
     for message in messages:
         missing_data = []
         for datum in required_data: 
@@ -54,9 +54,12 @@ def add_conversations():
         if missing_data:
             return {'success': False, 'code': 400, 'message': f'Missing the following in message[{messages.index(message)}]\'s data: {missing_data}'}, 400
         
-        if message['sender'] not in ["account1", "account2"]:
-            return {'success': False, 'code': 400, 'message': f'error in in messages[{messages.index(message)}]. sender must be \'account1\' or \'account2\''}, 400
-        
+        if message['sender'] not in ["account1", "account2", "account3", "account4", "account5"]:
+            return {'success': False, 'code': 400, 'message': f'error in in messages[{messages.index(message)}]. sender must be \'account1\' or \'account2\' or \'account3\' or \'account4\' or \'account5\''}, 400
+
+        # if message['receiver'] not in ["account1", "account2", "account3", "account4", "account5"]:
+        #     return {'success': False, 'code': 400, 'message': f'error in in messages[{messages.index(message)}]. receiver must be \'account1\' or \'account2\' or \'account3\' or \'account4\' or \'account5\''}, 400
+
         try:
             float(message['delay'])
         except:
@@ -65,10 +68,10 @@ def add_conversations():
         if message['response'] not in ["mention", "reply", "neutral"]:
             return {'success': False, 'code': 400, 'message': f'error in in messages[{messages.index(message)}]. response must be \'mention\', \'reply\', or \'neutral\''}, 400
         
-        if messages.index(message) == 0:
-            if message['response'] not in ['mention', 'neutral']:
-                print(message['response'])
-                return {'success': False, 'code': 400, 'message': f'error in in messages[{messages.index(message)}]. response must be \'mention\' or \'neutral\''}, 400
+        # if messages.index(message) == 0:
+        #     if message['response'] not in ['mention', 'neutral']:
+        #         print(message['response'])
+        #         return {'success': False, 'code': 400, 'message': f'error in in messages[{messages.index(message)}]. response must be \'mention\' or \'neutral\''}, 400
  
         if not message['content']:
             return {'success': False, 'code': 400, 'message': f'error in in messages[{messages.index(message)}]. content cannot be empty'}, 400
@@ -93,9 +96,12 @@ def get_config():
     status = db.get_value("value", "config", "name", "status")
     token1 = db.get_value("value", "config", "name", "token1")
     token2 = db.get_value("value", "config", "name", "token2")
+    token3 = db.get_value("value", "config", "name", "token3")
+    token4 = db.get_value("value", "config", "name", "token4")
+    token5 = db.get_value("value", "config", "name", "token5")
+
     
-    
-    return {'success': True, 'data': {'status': status, 'token1': token1, 'token2': token2}}
+    return {'success': True, 'data': {'status': status, 'token1': token1, 'token2': token2, 'token3': token3, 'token4': token4, 'token5': token5}}
 
 
 @app.route("/config", methods=["PATCH"])
@@ -104,7 +110,7 @@ def patch_config():
     except: request_data = {}
     
     
-    required_data = ['token1', 'token2', 'status']
+    required_data = ['token1', 'token2', 'token3', 'token4', 'token5', 'status']
     missing_data = []
     
     
@@ -125,7 +131,10 @@ def patch_config():
     db.cmd("UPDATE config SET value=%s WHERE name = %s", (request_data['status'], 'status'))
     db.cmd("UPDATE config SET value=%s WHERE name = %s", (request_data['token1'], 'token1'))
     db.cmd("UPDATE config SET value=%s WHERE name = %s", (request_data['token2'], 'token2'))
-    
+    db.cmd("UPDATE config SET value=%s WHERE name = %s", (request_data['token3'], 'token3'))
+    db.cmd("UPDATE config SET value=%s WHERE name = %s", (request_data['token4'], 'token4'))
+    db.cmd("UPDATE config SET value=%s WHERE name = %s", (request_data['token5'], 'token5'))
+
     return {'success': True}
 
 

@@ -21,13 +21,16 @@ def get_bots():
 
 # # print(get_bots())
 
-def post_bots(name, account1_token, account2_token, channel_id):
+def post_bots(name, account1_token, account2_token, account3_token, account4_token, account5_token, channel_id):
     """Post a new bot to the API
     """
     data = {
         'name': name,
         'account1_token': account1_token,
         'account2_token': account2_token,
+        'account3_token': account3_token,
+        'account4_token': account4_token,
+        'account5_token': account5_token,
         'channel_id': channel_id
     }
     r = requests.post(API_URL + '/bots', json=data)
@@ -83,7 +86,6 @@ def post_conversations(name, messages):
         'messages': messages
     }
     r = requests.post(API_URL + '/conversations', json=data)
-    # print(r.json())
     if r.status_code >= 200 and r.status_code < 300:
         data = r.json()
     else:

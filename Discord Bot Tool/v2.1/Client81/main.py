@@ -18,12 +18,11 @@ config = requests.get(F"{API_URL}/config").json()['data']
 
 
 
-
 def show_window2(main_window):
     layout2 = [[sg.Column(
     [
         [sg.Text('Name       ', justification='right')] + [sg.InputText(key='-NAME-', size=(20, 1))] + [sg.Text('      ', justification='right')] + [sg.Text('Channel ID ', justification='right')] + [sg.InputText(key='-CHANNEL-', size=(20, 1))],
-        [sg.Text('Account 1 ', justification='right')] + [sg.InputText(key='-AC1-', size=(20, 1))] + [sg.Text('      ', justification='right')] + [sg.Text('Account 2   ', justification='right')] + [sg.InputText(key='-AC2-', size=(20, 1))],
+        [sg.Text('Account 1 ', justification='right')] + [sg.InputText(key='-AC1-', size=(20, 1))] + [sg.Text('      ', justification='right')] + [sg.Text('Account 2   ', justification='right')] + [sg.InputText(key='-AC2-', size=(20, 1))] + [sg.Text('      ', justification='right')] + [sg.Text('Account 3   ', justification='right')] + [sg.InputText(key='-AC3-', size=(20, 1))] + [sg.Text('      ', justification='right')] + [sg.Text('Account 4   ', justification='right')] + [sg.InputText(key='-AC4-', size=(20, 1))] + [sg.Text('      ', justification='right')] + [sg.Text('Account 5   ', justification='right')] + [sg.InputText(key='-AC5-', size=(20, 1))],
         [sg.Text('')],
         [sg.Column([[sg.Button("Add", size=(10, 1), key="add_btn")]], expand_x=True, element_justification='center')],
     ]
@@ -34,13 +33,16 @@ def show_window2(main_window):
         if event == "Exit" or event == sg.WIN_CLOSED:
             break
         elif event == "add_btn":
-            if values['-NAME-'] != '' and values['-CHANNEL-'] != '' and values['-AC1-'] != '' and values['-AC2-'] != '':
+            if values['-NAME-'] != '' and values['-CHANNEL-'] != '' and values['-AC1-'] != '' and values['-AC2-'] != '' and values['-AC3-'] != '' and values['-AC4-'] != '' and values['-AC5-'] != '':
                 try:
                     inputted_data = {
                         'name': values['-NAME-'],
                         'channel_id': values['-CHANNEL-'],
                         'account1_token': values['-AC1-'],
-                        'account2_token': values['-AC2-']
+                        'account2_token': values['-AC2-'],
+                        'account3_token': values['-AC3-'],
+                        'account4_token': values['-AC4-'],
+                        'account5_token': values['-AC5-']
                     }
                     response = add_bot_to_list(inputted_data, main_window)
                     if response != False:
@@ -58,12 +60,13 @@ def add_row(window, key, layout):
     window.extend_layout(window[key], layout)
 
 def show_window3(main_window):
-    dropdown_account = ["Account 1", "Account 2"]
+    dropdown_reply = ["do not reply"]
+    dropdown_account = ["Account 1", "Account 2", "Account 3", "Account 4", "Account 5"]
     dropdown_action = ["Mention", "Reply", "Neutral"]
+    reply_line = 0
 
     cc = [sg.Column(
             [
-                
                 # [sg.Input("Bot2", size=(23, 1),)] + [sg.Combo(dropdown_account, default_value=dropdown_account[0])] + [sg.Input("30",size=(5, 1), pad=((15, 0), (1, 1)),)] + [sg.Combo(dropdown_account, default_value=dropdown_action[0], pad=((20, 0), (1, 1)),)],
             ], key="message_column", size=(500, 778), expand_x=True, expand_y=True, pad=(0,0), vertical_scroll_only = True, scrollable=True, )]
 
@@ -73,11 +76,11 @@ def show_window3(main_window):
             [sg.Text('')],
             [sg.Column([[sg.Text("Messages", font = ("Arial", 20), size=(10, 1),)]], expand_x=True, element_justification='center')],
             [sg.Column([[sg.Button("Add message", key="add_message_row", size=(10, 1),)]], expand_x=True, element_justification='center')],
-            [sg.Button("Messages", size=(20, 1), pad=((3,0), (1,1)), disabled=True)] + [sg.Button("Sender", size=(9,1), pad=((7, 0), (1, 1)), disabled=True)] + [sg.Button("Delay", pad=((7, 0), (1, 1)), disabled=True)] + [sg.Button("Response", pad=((7, 0), (1, 1)), disabled=True)],
+            [sg.Button("No", size=(3, 1), pad=((3,0), (1,1)), disabled=True)] + [sg.Button("Messages", size=(20, 1), pad=((3,0), (1,1)), disabled=True)] + [sg.Button("Sender", size=(10,1), pad=((7, 0), (1, 1)), disabled=True)] + [sg.Button("Receiver", size=(10,1), pad=((7, 0), (1, 1)), disabled=True)] + [sg.Button("Delay", pad=((7, 0), (1, 1)), disabled=True)] + [sg.Button("Response", pad=((7, 0), (1, 1)), disabled=True)],
             # [sg.Text("", size=(1,0))],
             cc
         ], expand_x=True, expand_y=True, pad=(0,0),)]]
-    window = sg.Window('Window3', layout3, resizable=True, size=(500, 500), modal=True, finalize=True)
+    window = sg.Window('Window3', layout3, resizable=True, size=(600, 500), modal=True, finalize=True)
     mcl = 0 # message_column_length
     while True:
         event, values = window.read()
@@ -85,7 +88,10 @@ def show_window3(main_window):
         if event == "Exit" or event == sg.WIN_CLOSED:
             break
         elif event == "add_message_row":
-            layout = [[sg.Input("Botnew"+str(random.randint(1,10)), key="i1_"+str(mcl), size=(23, 1),)] + [sg.Combo(dropdown_account,key="i2_"+str(mcl), default_value=dropdown_account[0])] + [sg.Input("30",key="i3_"+str(mcl),size=(5, 1), pad=((15, 0), (1, 1)),)] + [sg.Combo(dropdown_action, key="i4_"+str(mcl),default_value=dropdown_action[0], pad=((20, 0), (1, 1)),)],]
+            reply_line += 1
+            if reply_line >= 2:
+                dropdown_reply.append(f"reply line {reply_line-1}")
+            layout = [[sg.Text(mcl+1, key="i6_"+str(mcl), size=(3, 1), text_color="blue")] + [sg.Input("Botnew"+str(random.randint(1,10)), key="i1_"+str(mcl), size=(23, 1))] + [sg.Combo(dropdown_account,key="i2_"+str(mcl), default_value=dropdown_account[0], size=(10,1), pad=((7, 0), (1, 1)))] + [sg.Combo(dropdown_reply,key="i3_"+str(mcl), default_value=dropdown_reply[0], size=(10,1), pad=((7, 0), (1, 1)))] + [sg.Input("30",key="i4_"+str(mcl),size=(5, 1), pad=((7, 0), (1, 1)),)] + [sg.Combo(dropdown_action, key="i5_"+str(mcl),default_value=dropdown_action[0], pad=((7, 0), (1, 1)),)],]
             add_row(window, 'message_column', layout)
             window.refresh()                                # refresh required here
             window['message_column'].contents_changed()
@@ -100,13 +106,19 @@ def show_window3(main_window):
                         temp_dict = {}
                         temp_dict['content'] = values['i1_'+str(i)]
                         temp_dict['sender'] = values['i2_'+str(i)].lower().replace(" ", "")
-                        temp_dict['delay'] = values['i3_'+str(i)]
-                        temp_dict['response'] = values['i4_'+str(i)].lower().replace(" ", "")
+                        if values['i3_' + str(i)].lower() == 'do not reply':
+                            temp_dict['receiver'] = 0
+                        else:
+                            temp_dict['receiver'] = values['i3_' + str(i)].lower().replace("reply line ", "")
+                        temp_dict['delay'] = values['i4_'+str(i)]
+                        temp_dict['response'] = values['i5_'+str(i)].lower().replace(" ", "")
+                        temp_dict['line'] = str(i)
                         messages.append(temp_dict)
                     inputted_data = {
                         'name': values['-NAME-'],
                         'messages': messages
                     }
+                    print("messages: ===>", messages)
                     response = add_conversation_to_list(inputted_data, main_window)
 
                     if response != False:
@@ -144,7 +156,7 @@ if bots_data == False or coversations_data == False:
     exit()
 
 col1 = sg.Column([
-    [sg.Text('Token1       ', justification='right')] + [sg.InputText(key='-TOKEN1-', size=(20, 1), default_text=config['token1'])] + [sg.Text('      ', justification='right')] + [sg.Text('Token2 ', justification='right')] + [sg.InputText(key='-TOKEN2-', size=(20, 1), default_text=config['token2'])],
+    [sg.Text('Token1   ', justification='right')] + [sg.InputText(key='-TOKEN1-', size=(20, 1), default_text=config['token1'])] + [sg.Text('   ', justification='right')] + [sg.Text('Token2   ', justification='right')] + [sg.InputText(key='-TOKEN2-', size=(20, 1), default_text=config['token2'])] + [sg.Text('   ', justification='right')] + [sg.Text('Token3   ', justification='right')] + [sg.InputText(key='-TOKEN3-', size=(20, 1), default_text=config['token3'])] + [sg.Text('   ', justification='right')] + [sg.Text('Token4   ', justification='right')] + [sg.InputText(key='-TOKEN4-', size=(20, 1), default_text=config['token4'])] + [sg.Text('   ', justification='right')] + [sg.Text('Token5   ', justification='right')] + [sg.InputText(key='-TOKEN5-', size=(20, 1), default_text=config['token5'])],
         [sg.Button(f"Turn {'off' if config['status'] == 'on' else 'on'}", auto_size_button=False, expand_x=True, key="toggle_bots")],
         [sg.Frame('Channels:', [
             [sg.Column([
@@ -165,8 +177,8 @@ col1 = sg.Column([
                     enable_click_events=True,           # Comment out to not enable header and other clicks
                     tooltip='Channels Table')]
             ], expand_y=True,expand_x=True,)]
-        ], expand_y=True,expand_x=True,)]
-    ],pad=(0,0), expand_x=True, expand_y=True)
+        ], expand_y=True, expand_x=True,)]
+    ], pad=(0, 0), expand_x=True, expand_y=True)
 
 col2 = sg.Column([
         [sg.Frame('Conversations:', [
@@ -230,6 +242,9 @@ while True:
        
         config['token1'] = values1['-TOKEN1-']
         config['token2'] = values1['-TOKEN2-']
+        config['token3'] = values1['-TOKEN3-']
+        config['token4'] = values1['-TOKEN4-']
+        config['token5'] = values1['-TOKEN5-']
         resp = requests.patch(F"{API_URL}/config", json=config)
         
         if not resp.json()['success']:
@@ -237,6 +252,7 @@ while True:
             config['status'] = 'on' if config['status'] == 'off' else 'off'
             
     if registered_status == "on" and config['status'] == "off":
+        # print("Cycle Finished: All messages have been processed. The bot has been automatically turned off.")
         toaster.show_toast("Cycle Finished", "All messages have been processed. The bot has been automatically turned off.", icon_path="", threaded=True)
         
     registered_status = config['status']

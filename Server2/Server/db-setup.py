@@ -35,10 +35,19 @@ if not db.get_value("value", "config", "name", "status"):
     
 if not db.get_value("value", "config", "name", "token1"):
     db.cmd("INSERT INTO config VALUES(%s, %s)", value=("token1", None))
-    
-    
-    
+
+
 if not db.get_value("value", "config", "name", "token2"):
     db.cmd("INSERT INTO config VALUES(%s, %s)", value=("token2", None))
-    
-    
+
+
+if not db.get_value("value", "config", "name", "token3"):
+    db.cmd("INSERT INTO config VALUES(%s, %s)", value=("token3", None))
+
+
+if not db.get_value("value", "config", "name", "token4"):
+    db.cmd("INSERT INTO config VALUES(%s, %s)", value=("token4", None))
+
+
+if not db.get_value("value", "config", "name", "token5"):
+    db.cmd("INSERT INTO config VALUES(%s, %s)", value=("token5", None))
