@@ -156,7 +156,8 @@ if bots_data == False or coversations_data == False:
     exit()
 
 col1 = sg.Column([
-    [sg.Text('Token1   ', justification='right')] + [sg.InputText(key='-TOKEN1-', size=(20, 1), default_text=config['token1'])] + [sg.Text('   ', justification='right')] + [sg.Text('Token2   ', justification='right')] + [sg.InputText(key='-TOKEN2-', size=(20, 1), default_text=config['token2'])] + [sg.Text('   ', justification='right')] + [sg.Text('Token3   ', justification='right')] + [sg.InputText(key='-TOKEN3-', size=(20, 1), default_text=config['token3'])] + [sg.Text('   ', justification='right')] + [sg.Text('Token4   ', justification='right')] + [sg.InputText(key='-TOKEN4-', size=(20, 1), default_text=config['token4'])] + [sg.Text('   ', justification='right')] + [sg.Text('Token5   ', justification='right')] + [sg.InputText(key='-TOKEN5-', size=(20, 1), default_text=config['token5'])],
+    [sg.Text('Token1   ', justification='right')] + [sg.InputText(key='-TOKEN1-', size=(20, 1), default_text=config['token1'])] + [sg.Text('   ', justification='right')] + [sg.Text('Token2   ', justification='right')] + [sg.InputText(key='-TOKEN2-', size=(20, 1), default_text=config['token2'])] + [sg.Text('   ', justification='right')] + [sg.Text('Token3   ', justification='right')] + [sg.InputText(key='-TOKEN3-', size=(20, 1), default_text=config['token3'])] + [sg.Text('   ', justification='right')],
+    [sg.Text('Token4   ', justification='right')] + [sg.InputText(key='-TOKEN4-', size=(20, 1), default_text=config['token4'])] + [sg.Text('   ', justification='right')] + [sg.Text('Token5   ', justification='right')] + [sg.InputText(key='-TOKEN5-', size=(20, 1), default_text=config['token5'])],
         [sg.Button(f"Turn {'off' if config['status'] == 'on' else 'on'}", auto_size_button=False, expand_x=True, key="toggle_bots")],
         [sg.Frame('Channels:', [
             [sg.Column([
