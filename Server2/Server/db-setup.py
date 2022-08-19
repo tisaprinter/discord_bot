@@ -10,6 +10,7 @@ db.cmd("""CREATE TABLE IF NOT EXISTS conversations(
     id BIGINT NOT NULL AUTO_INCREMENT,
     name TEXT,
     messages JSON,
+    sent BOOLEAN,
     PRIMARY KEY (id))
     """)
 
@@ -31,8 +32,8 @@ db.cmd("""
 
 if not db.get_value("value", "config", "name", "status"):
     db.cmd("INSERT INTO config VALUES(%s, %s)", value=("status", "off"))
-    
-    
+
+
 if not db.get_value("value", "config", "name", "token1"):
     db.cmd("INSERT INTO config VALUES(%s, %s)", value=("token1", None))
 

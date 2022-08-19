@@ -61,7 +61,7 @@ def get_value(target, table="", search_filter=None, value=None, order=None, limi
     conn.close()
     if not res and not arr:
         return None
-    
+
     elif not res and arr:
         return []
 
@@ -70,7 +70,7 @@ def get_value(target, table="", search_filter=None, value=None, order=None, limi
             return res
         return [row[0] for row in res]
     return res[0]
-    
+
 
 
 async def async_cmd(cmd, value=None, database=DATABASE['NAME']):
@@ -125,7 +125,7 @@ async def async_get_value(target, database=DATABASE['NAME'], table="", searchFil
 
     if not res and not arr:
         return None
-    
+
     elif not res and arr:
         return []
 

@@ -47,7 +47,7 @@ data = [
 headings = ["User", "Action"]
 
 # ------ Window Layout ------
-layout = [[sg.Table(values=data[1:][:], 
+layout = [[sg.Table(values=data[1:][:],
                     headings=headings,
                     # max_col_width=25,
                     auto_size_columns=False,

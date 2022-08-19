@@ -52,7 +52,7 @@ def show_window2(main_window):
                     sg.popup_error("Error: Something went wrong")
             else:
                 sg.popup("Please fill all fields", title="Error")
-        
+
     window.close()
 
 def add_row(window, key, layout):
@@ -96,7 +96,7 @@ def show_window3(main_window):
             window.refresh()                                # refresh required here
             window['message_column'].contents_changed()
             time.sleep(0.1)
-            window['message_column'].Widget.canvas.yview_moveto(1.0) 
+            window['message_column'].Widget.canvas.yview_moveto(1.0)
             mcl += 1
         elif event == "add_conversation":
             if values['-NAME-'] != '':
@@ -118,7 +118,7 @@ def show_window3(main_window):
                         'name': values['-NAME-'],
                         'messages': messages
                     }
-                    print("messages: ===>", messages)
+                    # print("messages: ===>", messages)
                     response = add_conversation_to_list(inputted_data, main_window)
 
                     if response != False:
@@ -128,7 +128,7 @@ def show_window3(main_window):
                     sg.popup_error("Error: Something went wrong")
             else:
                 sg.popup("Please fill all fields", title="Error")
-        
+
     window.close()
 
 sg.popup_quick_message('Hang on for a moment, this will take a bit to create....', auto_close=True, non_blocking=True, font='Default 18')
@@ -161,7 +161,7 @@ col1 = sg.Column([
         [sg.Frame('Channels:', [
             [sg.Column([
                 [sg.Button("Add Channels", auto_size_button=True, expand_x=True, key="add_channels")],
-                [sg.Table(values=bots_data, 
+                [sg.Table(values=bots_data,
                     headings=["ID", "Action"],
                     max_col_width=25,
                     auto_size_columns=True,
@@ -184,7 +184,7 @@ col2 = sg.Column([
         [sg.Frame('Conversations:', [
             [sg.Column([
                 [sg.Button("Add Conversation", auto_size_button=True, expand_x=True, key="add_conversations")],
-                [sg.Table(values=coversations_data, 
+                [sg.Table(values=coversations_data,
                     headings=headings,
                     max_col_width=25,
                     auto_size_columns=True,
@@ -228,43 +228,43 @@ while True:
         except: continue
         channels = [channel.strip() for channel in channels if channel.strip()]
         requests.post(f"{API_URL}/channels", json={'channels': channels})
-        
+
         for channel in channels:
             data = window1['bots_table'].Values
             if [str(channel), DELETE_EMOJI] not in data: data.append([str(channel), DELETE_EMOJI])
             window1['bots_table'].update(values=data)
-            
+
     if event1 == 'add_conversations':
         window3 = show_window3(window1)
     if event1 == "toggle_bots":
         registered_status = 'on' if config['status'] == 'off' else 'off'
         config['status'] = 'on' if config['status'] == 'off' else 'off'
-       
+
         config['token1'] = values1['-TOKEN1-']
         config['token2'] = values1['-TOKEN2-']
         config['token3'] = values1['-TOKEN3-']
         config['token4'] = values1['-TOKEN4-']
         config['token5'] = values1['-TOKEN5-']
         resp = requests.patch(F"{API_URL}/config", json=config)
-        
+
         if not resp.json()['success']:
             sg.popup_error(resp.json()['message'])
             config['status'] = 'on' if config['status'] == 'off' else 'off'
-            
+
     if registered_status == "on" and config['status'] == "off":
         # print("Cycle Finished: All messages have been processed. The bot has been automatically turned off.")
         toaster.show_toast("Cycle Finished", "All messages have been processed. The bot has been automatically turned off.", icon_path="", threaded=True)
-        
+
     registered_status = config['status']
     window1.Element('toggle_bots').update(f"Turn {'off' if config['status'] == 'on' else 'on'}")
-    
+
     if isinstance(event1, tuple):
         if event1[2][1] == 1: # That means Delete
             table_key = event1[0]
             data = window1[event1[0]].Values
             # try:
             # Delete the bot from server first
-            try: 
+            try:
                 data_id_to_delete = str(data[event1[2][0]][0]).split("_")
                 data_id_to_delete = data_id_to_delete[len(data_id_to_delete)-1]
                 if event1[0] == 'bots_table':
@@ -274,7 +274,7 @@ while True:
             except: ...
 
 
-            try: 
+            try:
                 if str(response['success']).lower() == "false":
                     sg.popup("Error: " + str(response['message']))
             except: ...
@@ -283,6 +283,6 @@ while True:
                 window1[event1[0]].update(values=data)
             # except Exception as e:
             #     sg.popup_error(str(e), keep_on_top=True)
-            
+
 
 window1.close()

@@ -67,7 +67,7 @@ def get_conversations():
     """Get all conversations from the API
     """
     r = requests.get(API_URL + '/conversations')
-    
+
     if r.status_code >= 200 and r.status_code < 300:
         data = r.json()
     else:
@@ -83,7 +83,8 @@ def post_conversations(name, messages):
     """
     data = {
         'name': name,
-        'messages': messages
+        'messages': messages,
+        'sent': False
     }
     r = requests.post(API_URL + '/conversations', json=data)
     if r.status_code >= 200 and r.status_code < 300:
@@ -101,7 +102,7 @@ def delete_conversation(id):
     """
     # print("delete_conversation:", id)
     r = requests.delete(API_URL + '/conversations/' + str(id),)
-    
+
     if r.status_code >= 200 and r.status_code < 300:
         data = r.json()
     else:
