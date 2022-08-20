@@ -190,10 +190,11 @@ def sleep(duration):
 def main():
     while True:
         if not is_off():
-            print("on")
             send_messages()
             # db.cmd("UPDATE config SET value=%s where name=%s", ("off", "status"))
 
         delete_old_messages()
+        # print("sleep 500")
+        time.sleep(1)
 
 if __name__ == "__main__": main()
