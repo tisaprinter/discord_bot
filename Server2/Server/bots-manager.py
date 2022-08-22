@@ -22,7 +22,7 @@ while True:
 
     if new_status == "off":
         status = "off"
-        if proc: proc.kill()
+        if 'proc' in locals(): proc.kill()
         continue
 
     if status == "on":
