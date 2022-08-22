@@ -118,66 +118,66 @@ def send_messages():
                     except: continue
 
 
-                ###################################################################################
-                last_message_id = 0
+                    ###################################################################################
+                    last_message_id = 0
 
-                for message in messages:
-                    delete_old_messages()
-                    if is_off(): return
+                    for message in messages:
+                        delete_old_messages()
+                        if is_off(): return
 
-                    sender_token = accounts[message['sender']]['token']
-                    content = message['content']
-                    # receiver_id = accounts['account2' if message['sender'] == 'account1' else 'account1']['id']
-                    # receivers = [accounts[p]['username'] for p in accounts if p != message['sender']]
-                    # print("receiver ids==>", receivers, content)
-                    # receivername = ""
-                    # for receiver in receivers:
-                    #     receivername += f"@{receiver} "
+                        sender_token = accounts[message['sender']]['token']
+                        content = message['content']
+                        # receiver_id = accounts['account2' if message['sender'] == 'account1' else 'account1']['id']
+                        # receivers = [accounts[p]['username'] for p in accounts if p != message['sender']]
+                        # print("receiver ids==>", receivers, content)
+                        # receivername = ""
+                        # for receiver in receivers:
+                        #     receivername += f"@{receiver} "
 
-                    # if message['response'] == 'mention':
-                    #     content = f"{receivername} {content}"
+                        # if message['response'] == 'mention':
+                        #     content = f"{receivername} {content}"
 
-                    data = {'content': content,"nonce":None,"tts":False}
+                        data = {'content': content,"nonce":None,"tts":False}
 
-                    # if message['response'] == 'reply' and accounts[message['receiver']]['token']:
-                    if int(message['receiver']) > 0:
-                        print("last_message_id 1")
-                        resp_messages = requests.get(f"https://discord.com/api/v9/channels/{channel_id}/messages", headers={'authorization': accounts[message['sender']]['token'], 'content-type': 'application/json'})
-                        if not resp_messages:
-                            return {'success': False, 'code': 400, 'message': f'Missing the following in channel\'s data:'}, 400
-                        print("last_message_id 2", resp_messages)
-                        # me = requests.get("https://discord.com/api/v9/users/@me", headers={'authorization': accounts['account3']['token'], 'content-type': 'application/json'})
-                        # print("last_message_id 3", me.json())
-                        # if 'id' not in me.text:
-                        #     return
+                        # if message['response'] == 'reply' and accounts[message['receiver']]['token']:
+                        if int(message['receiver']) > 0:
+                            print("last_message_id 1")
+                            resp_messages = requests.get(f"https://discord.com/api/v9/channels/{channel_id}/messages", headers={'authorization': accounts[message['sender']]['token'], 'content-type': 'application/json'})
+                            if not resp_messages:
+                                return {'success': False, 'code': 400, 'message': f'Missing the following in channel\'s data:'}, 400
+                            print("last_message_id 2", resp_messages)
+                            # me = requests.get("https://discord.com/api/v9/users/@me", headers={'authorization': accounts['account3']['token'], 'content-type': 'application/json'})
+                            # print("last_message_id 3", me.json())
+                            # if 'id' not in me.text:
+                            #     return
 
-                        resp_messages = resp_messages.json()
-                        # me = me.json()
-                        # print(resp[0])
-                        # last_message_id = [p for p in resp if p['author']['id'] == me['id']]
-                        print("message['line'] - message['receiver']", int(message['line']) - int(message['receiver']))
-                        reply_message = resp_messages[int(message['line']) - int(message['receiver'])]
-                        # reply_message = last_message_id[0]
-                        print("last_message_id 4", reply_message)
-                        data['message_reference'] = {'channel_id': str(channel_id), 'guild_id': guild_id, 'message_id': reply_message['id']}
+                            resp_messages = resp_messages.json()
+                            # me = me.json()
+                            # print(resp[0])
+                            # last_message_id = [p for p in resp if p['author']['id'] == me['id']]
+                            print("message['line'] - message['receiver']", int(message['line']) - int(message['receiver']))
+                            reply_message = resp_messages[int(message['line']) - int(message['receiver'])]
+                            # reply_message = last_message_id[0]
+                            print("last_message_id 4", reply_message)
+                            data['message_reference'] = {'channel_id': str(channel_id), 'guild_id': guild_id, 'message_id': reply_message['id']}
 
-                    while True:
+                        while True:
+                            try:
+                                print("message data", json.dumps(data))
+                                resp = requests.post(f"https://discord.com/api/v9/channels/{channel_id}/messages",
+                                    headers={'authorization': sender_token, 'content-type': 'application/json'},
+                                    data = json.dumps(data)
+                                )
+                                break
+                            except:
+                                sleep(5)
+                                continue
                         try:
-                            print("message data", json.dumps(data))
-                            resp = requests.post(f"https://discord.com/api/v9/channels/{channel_id}/messages",
-                                headers={'authorization': sender_token, 'content-type': 'application/json'},
-                                data = json.dumps(data)
-                            )
-                            break
-                        except:
-                            sleep(5)
-                            continue
-                    try:
-                        last_message_id = resp.json()['id']
-                        messages_log.append({'time': time.time(), 'author': accounts[message['sender']], 'id': last_message_id, 'channel_id': channel_id})
-                    except: break
+                            last_message_id = resp.json()['id']
+                            messages_log.append({'time': time.time(), 'author': accounts[message['sender']], 'id': last_message_id, 'channel_id': channel_id})
+                        except: break
 
-                    sleep(float(message['delay']))
+                        sleep(float(message['delay']))
 
             requests.patch(F"{API_URL}/conversations/{conversation[0]}", data={'sent': True})
 
