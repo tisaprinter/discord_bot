@@ -208,7 +208,7 @@ def main():
     while True:
         if not is_off():
             send_messages()
-            # db.cmd("UPDATE config SET value=%s where name=%s", ("off", "status"))
+            db.cmd("UPDATE config SET value=%s where name=%s", ("off", "status"))
 
         delete_old_messages()
         # print("sleep 500")
